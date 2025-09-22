@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="custom_crm_field.view_calendar_event_calendar_inherit" model="ir.ui.view">
+        <field name="name">calendar.event.calendar.inherit.location.widget</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <field name="location" position="attributes">
+                <attribute name="widget">url</attribute>
+            </field>
+            <field name="location" position="before">
+                <field name="crm_contact_name" invisible="not crm_contact_name" options="{'icon': 'fa fa-user-o'}"/>
+                <field name="crm_phone" invisible="not crm_phone" options="{'icon': 'fa fa-address-card-o'}"/>
+                <field name="crm_note" invisible="not crm_note" options="{'icon': 'fa fa-comment'}"/>
+
+            </field>
+        </field>
+    </record>
+</odoo>

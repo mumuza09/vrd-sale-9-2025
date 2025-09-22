@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_tracking_map" model="ir.actions.client">
+        <field name="name">GPS</field>
+        <field name="tag">tracking_map_component</field>
+    </record>
+
+
+    <menuitem id="menu_tracking_map" 
+            name="GPS" 
+            action="action_tracking_map" 
+            web_icon="tracking_gps,static/description/map.png"/>
+</odoo>

@@ -1,0 +1,185 @@
+<t t-name="tracking_map_template">
+    <div class="o_kanban_view o_hr_employee_kanban o_view_controller o_action">
+        <div class="o_content o_component_with_search_panel">
+            <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto pe-1 ps-3 d-none d-md-block">
+                <section class="o_search_panel_section o_search_panel_category">
+                    <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default"><i class="fa fa-users o_search_panel_section_icon text-primary me-2" style="null">
+                        </i><b>User</b>
+                    </header>
+                    <ul class="list-group d-block o_search_panel_field">
+                        <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0 ps-0" 
+                        t-foreach="state.users" t-as="user" t-key="user.id" t-on-click="() => { state.selectedUser = user.id; selectUser(); }">
+                            <header t-att-class="'list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0 text-900 fw-bold ' + (state.selectedUser === user.id ? 'active' : '')">
+                                <div class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 o_with_counters" data-tooltip="All" title="">
+                                    <button class="o_toggle_fold btn p-0 flex-shrink-0 text-center"></button>
+                                    <span t-att-class="'o_employee_availability ' + user.hr_icon_display"></span>
+                                    <span class="o_search_panel_label_title text-truncate fw-bold">
+                                    <t t-esc="user.employee_name"/> 
+                                    </span>
+                                </div>
+                            </header>
+                        </li>
+                    </ul>
+                </section>
+                <section class="o_search_panel_section o_search_panel_category">
+                    <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                        <i class="fa fa-calendar o_search_panel_section_icon text-primary me-2"></i><b>Date</b>
+                    </header>
+                    <div class="d-flex align-items-center">
+                        <input type="date" 
+                            class="form-control w-100"
+                            t-model="state.selectedDate" 
+                            t-on-change="selectDate" />
+                    </div>
+                </section>
+            </div>
+
+
+            <div class="d-flex flex-column flex-grow-1 d-md-none">
+
+                        <!-- Sidebar Dropdown (Mobile) -->
+                        <div class="o_search_panel w-100 d-flex overflow-visible border-top">
+                            <div class="d-flex overflow-auto align-items-center px-2">
+
+                                <!-- User Dropdown -->
+                                <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret o-dropdown dropdown-toggle dropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-users o_search_panel_section_icon text-primary me-2"></i>
+                                    <b class="pe-2">
+                                        <t t-if="state.selectedUser">
+                                            <t t-esc="state.users.find(user => user.id === state.selectedUser)?.name || 'User'"/>
+                                        </t>
+                                        <t t-if="!state.selectedUser">
+                                            User
+                                        </t>
+                                    </b>
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#" 
+                                        t-foreach="state.users" t-as="user" t-key="user.id"
+                                        t-on-click="() => { state.selectedUser = user.id; selectUser(); }">
+                                            <t t-esc="user.name"/>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Date Picker (Mobile) -->
+                                <input type="date" class="form-control my-2 mx-1 w-auto" t-model="state.selectedDate" t-on-change="selectDate"/>
+                            </div>
+                        </div>
+            </div>
+
+
+            
+            <div class="o_kanban_renderer o_renderer d-flex o_kanban_ungrouped align-content-start flex-wrap justify-content-start">
+                    <div id="map"></div>
+
+                    <div class="range-slider" id="rangeSliderContainer" style='--min:0; --max:0; --step:0; --value:0; --min-text:"09:00"; --max-text:"18:00";width:100%;'>
+                        <input type="range" id="timeSlider" min="0" max="0" step="0" value="null"  t-on-input="loadLocations"/>
+                        <output id="timeOutput"></output>
+                        <div class='range-slider__progress'></div>
+                    </div>   
+
+            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                /* Main Container */
+                .container {
+                    display: flex;
+                    flex: 1;
+                    height: calc(100% - 40px); /* Exclude footer height */
+                }
+
+                /* Left Panel (Filters) */
+                .sidebar {
+                    width: 220px;
+                    padding: 15px;
+                    background: #f8f9fa;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .sidebar select,
+                .sidebar input,
+                .sidebar button {
+                    padding: 8px;
+                    font-size: 16px;
+                    width: 100%;
+                }
+
+                @media (min-width: 992px) { 
+                    #map {
+                        width: 100%;
+                        height: 96%;
+                        border: none;
+                        z-index: 1;
+                    }
+                }
+
+                @media (max-width: 991px) { 
+                    #map {
+                        width: 100%;
+                        height: 87%;
+                        border: none;
+                        z-index: 1;
+                    }
+                }
+
+
+                /* Footer (Fixed Bottom) */
+                .footer {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    // height: 60px;
+                    // background: #ddd;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 15px;
+                    font-size: 18px;
+                    padding: 10px;
+                }
+
+                input[type="range"] {
+                    width: 300px;
+                }
+                
+                .o_employee_availability {
+                    display: inline-block;
+                    border-radius: 50%;
+                    width: 1rem;
+                    height: 1rem;
+                    margin-right: 5px;
+                }
+
+                .o_employee_availability.presence_present {
+                    background-color: green; 
+                }
+
+                .o_employee_availability.presence_out_of_working_hour,
+                .o_employee_availability.presence_archive {
+                    background-color: gray; 
+                }
+
+                .o_employee_availability.presence_absent {
+                    background-color: orange; 
+                }
+
+            </style>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            </div>
+        </div>
+    </div>
+</t>
+

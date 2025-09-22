@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_scheduled_line" model="ir.cron">
+		<field name="name">Noti lineOA at 09:15 (Excluding Sun)</field>
+		<field name="model_id" ref="model_schedule_line"/>
+		<field name="state">code</field>
+		<field name="code">model.scheduled_function()</field>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="interval_number">1</field> 
+        <field name="interval_type">days</field>
+		<field name="nextcall">2025-03-11 02:15:00</field> <!-- Change the date manually -->
+		<!-- <field name="nextcall" eval="(datetime.datetime.now() + datetime.timedelta(days=1)).replace(hour=10, minute=30, second=0).strftime('%Y-%m-%d %H:%M:%S')"/>           -->
+	</record>
+</odoo>

@@ -1,0 +1,164 @@
+<odoo>
+    <data>
+        <record id="inherited_crm_lead_view_form" model="ir.ui.view">
+            <field name="name">crm.lead.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>       
+            <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[@name='opportunity_partner']/field[@name='partner_id']" position="before">
+                    <field name="x_studio_contact_name"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[@name='opportunity_partner']/field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[@name='opportunity_partner']/div[2]" position="after">
+                    <field name="x_studio_html_field_4fq_1ifq46uam" widget="html" string="Location"/>
+                    <field name="x_studio_pricetext" invisible="True"/>
+                    <field name="x_studio_locationtype" invisible="True"/>
+                    <field name="x_studio_datetime_1" invisible="True"/>
+                </xpath>
+                <xpath expr="//page[@name='internal_notes']" position="attributes">
+                    <attribute name="string">Details</attribute>
+                </xpath>
+                <xpath expr="//page[@name='internal_notes']" position="inside">
+                    <group name="studio_group_7be_1ifrh32uv">
+                    <group name="studio_group_7be_left"/>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@name='studio_group_7be_left']" position="inside">
+                    <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='lead']/group[1]/group[3]/field[@name='source_id']" position="move"/>
+                    <field name="x_studio_type_of_work"/>
+                    <field name="x_studio_type_of_business"/>
+                    <field name="status"/>
+                    <field name="furniture_select"/>                    
+                    <field name="x_studio_note_1" invisible="True"/>
+                    <field name="estimated_project_price"/>                    
+                    <field name="actual_project_price"/>                    
+                    <field name="deposit_collected"/>                    
+                    <field name="final_payment_collected"/>                    
+                    <field name="percentage_money_collected"/>                    
+                </xpath>
+                <xpath expr="//group[@name='studio_group_7be_1ifrh32uv']" position="inside">
+                    <group name="studio_group_7be_right">
+                    <field name="x_studio_price" string="Budget"/>
+                    <field name="x_studio_datetime" string="Preferred Date/Time for Visit" widget="datetime" options="{&quot;show_seconds&quot;:false}"/>
+                    <field name="x_studio_measure"/>
+                    <field name="status_detail"/>
+                    </group>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Internal Notes" name="studio_page_6gb_1ifrhg2lk"/>
+                </xpath>
+                <xpath expr="//page[@name='studio_page_6gb_1ifrhg2lk']" position="inside">
+                    <xpath expr="//field[@name='description']" position="move"/>
+                </xpath>
+                <xpath expr="//field[@name='description']" position="attributes">
+                    <attribute name="options"/>
+                    <attribute name="placeholder"/>
+                </xpath>
+
+                <xpath expr="//field[@name='x_studio_type_of_business']" position="attributes">
+                    <attribute name="string">Type of Property</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[not(@name)][1]/field[@name='tag_ids']" position="after">
+                    <field name="page_id" string="Page"/>
+                </xpath>
+
+
+                <xpath expr="//field[@name='stage_id']" position="attributes">
+                    <attribute name="domain">stage_domain</attribute>
+                </xpath>
+                                    <!-- <attribute name="domain">stage_domain</attribute> -->
+
+
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="sales_staff" />
+                </xpath>
+
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Progress Date">
+                        <group>
+                            <group>
+                                <field name="inactive_date"/>
+                                <field name="appointment_date"/>
+                                <field name="visit2_date"/>
+                                <field name="design_date"/>
+                                <field name="design3_date"/>
+                                <field name="deposit_date"/>
+                                <field name="installation_date"/>
+                            </group>
+                            <group>
+                                <field name="leads_date"/>
+                                <field name="visit_date"/>
+                                <field name="debrief_date"/>
+                                <field name="design2_date"/>
+                                <field name="quotation_date"/>
+                                <field name="production_date"/>
+                                <field name="final_payment_date"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherlit_list_view" model="ir.ui.view">
+            <field name="name">crm.lead.list</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='stage_id']" position="after">
+                    <field name="x_studio_type_of_business" optional="show"/>
+                    <field name="x_studio_type_of_work" optional="show"/>
+                    <field name="x_studio_price" optional="show"/>
+                    <field name="status" optional="show"/>
+                    <field name="status_detail" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+        
+
+
+
+        <record id="inherit_quick_create_opportunity_form" model="ir.ui.view">
+            <field name="name">crm.lead.form.quick_create.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('employee_ids', '=', False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+<!-- 
+        <record id="view_crm_pipeline_kanban_inherit" model="ir.ui.view">
+            <field name="name">crm.pipeline.kanban.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='probability']" position="before">
+                    <field name="stage_id"
+                    options='{"group_by_tooltip": {"requirements": "Description"}}'
+                    domain="[('company_id', '=', user.company_id.id)]"
+                    groups="base.group_user"/>
+                </xpath>
+            </field>
+        </record> -->
+
+
+        <record id="crm_stage_company_rule" model="ir.rule">
+            <field name="name">Limit CRM Stages by Company</field>
+            <field name="model_id" ref="crm.model_crm_stage"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids or [user.company_id.id, False])]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="osm_map_page" name="OpenStreetMap Page">
+         <t t-set="title">OpenStreetMap</t>
+            <div class="container mt-4">
+                <!-- <h2>OpenStreetMap Integration</h2> -->
+                <div id="map" style="height: 100%; width: 100%;"></div>
+            </div>
+
+            <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var map = L.map('map').setView([<t t-esc="lat"/>, <t t-esc="lon"/>], 15); // Default Bangkok
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: ' OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    L.marker([<t t-esc="lat"/>, <t t-esc="lon"/>]).addTo(map)
+
+                    // Fetch marker locations from Odoo
+                    <!-- fetch('/get-locations',{
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ partner_id : 3 , counts:100 })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            data.result.forEach(location => {
+                                L.marker([location.latitude, location.longitude])
+                                    .addTo(map)
+                                    .bindPopup(location.name);
+                            });
+                        }); -->
+
+                });
+            </script>
+    </template>
+
+</odoo>
+

@@ -1,0 +1,14 @@
+<odoo>
+    <record id="calendar_event_form_quick_create_employee_only" model="ir.ui.view">
+        <field name="name">calendar.event.form.quick_create.employee_only</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form_quick_create"/>
+        <field name="arch" type="xml">
+            <field name="partner_ids" position="attributes">
+                <attribute name="domain">[('employee', '=', True)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    
+</odoo>
